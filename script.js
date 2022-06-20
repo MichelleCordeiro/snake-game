@@ -11,10 +11,25 @@ let food = {
   x: Math.floor(Math.random() * 15 + 1) * box,
   y: Math.floor(Math.random() * 15 + 1) * box
 }
+let audio = document.createElement('audio')
+let points = document.querySelector('#points')
+let levels = document.querySelector('#levels')
+let records = document.querySelector('#records')
+let level = 0
+
+function soundBite() {
+  audio.src = './audio/sound_bite.mp3'
+  audio.play()
+}
 
 function makeBG() {
   context.fillStyle = 'lightgreen'
   context.fillRect(0, 0, 16 * box, 16 * box)
+  context.lineWidth = 2
+  context.strokeStyle = 'green'
+  context.strokeRect(0, 0, canvas.width, canvas.height)
+
+  context.shadowColor = 'red'
 }
 
 function makeSnake() {
@@ -29,6 +44,22 @@ function drawnFood() {
   context.fillRect(food.x, food.y, box, box)
 }
 
+function setStats() {
+  points.innerText = snake.length
+  record = Number(points.innerText)
+
+  if (snake.length % 10 == 0) {
+    level += 1
+  }
+
+  levels.innerText = level
+
+  if (snake.length > Number(localStorage.getItem('record'))) {
+    localStorage.setItem('record', snake.length)
+  }
+  records.innerText = record
+}
+
 document.addEventListener('keydown', update)
 
 function update(event) {
@@ -39,9 +70,11 @@ function update(event) {
 }
 
 function startGame() {
-  if (snake[0].x > 15 * box && direction == 'right') snake[0].x = 0
+  records.innerText = Number(localStorage.getItem('record'))
+
+  if (snake[0].x >= 15 * box && direction == 'right') snake[0].x = 0
   if (snake[0].x < 0 && direction == 'left') snake[0].x = 16 * box
-  if (snake[0].y > 15 * box && direction == 'down') snake[0].y = 0
+  if (snake[0].y >= 15 * box && direction == 'down') snake[0].y = 0
   if (snake[0].y < 0 && direction == 'up') snake[0].y = 16 * box
 
   makeBG()
@@ -61,6 +94,8 @@ function startGame() {
   } else {
     food.x = Math.floor(Math.random() * 15 + 1) * box
     food.y = Math.floor(Math.random() * 15 + 1) * box
+    setStats()
+    soundBite()
   }
 
   let newHead = {
