@@ -1,0 +1,11 @@
+body {
+  height: 95vh;
+  width: 95vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-transform: uppercase;
+  flex-direction: column;
+  color: green;
+  font-weight: bold;
+}
